@@ -32,7 +32,7 @@ def main():
     args = parser.parse_args()
 
     print(json.dumps(vars(args), sort_keys=True, indent=4, separators=(', ', ': '), ensure_ascii=False))
-    init_logger(log_file="./log/{}.log".format(time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())))
+    init_logger(log_file="./log/{}.log".format(time.strftime("%Y-%m-%d-%H-%M-%S", time.localtime())))
     seed_everything(args.seed)
 
     args.output_model_path = os.path.join(args.output_dir, args.dataset, args.event_type, "best_model.pkl")
@@ -44,7 +44,7 @@ def main():
     args.device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
     # tokenizer
-    tokenizer = BertTokenizerFast.from_pretrained("/data/zhoujx/prev_trained_model/rbt3")
+    tokenizer = BertTokenizerFast.from_pretrained(args.model_name_or_path)
 
     # dataset & dataloader
     args.test_data = "./data/{}/{}/test.tsv".format(args.dataset, args.event_type)

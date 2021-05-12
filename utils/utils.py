@@ -170,7 +170,7 @@ def extract_result(text, labels):
 def read_by_lines(path):
     """read the data by line"""
     result = list()
-    with open(path, "r") as infile:
+    with open(path, "r",encoding='utf-8') as infile:
         for line in infile:
             result.append(line.strip())
     return result

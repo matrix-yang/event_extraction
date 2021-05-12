@@ -48,7 +48,8 @@ def evaluate(args, eval_iter, model, metric):
 
     precision, recall, f1_score = metric.accumulate()
 
-    return precision, recall, f1_score, batch_loss/(step+1)
+    return precision, recall, f1_score, batch_loss / (step + 1)
+
 
 def train(args, train_iter, model):
     logger.info("***** Running train *****")
@@ -99,10 +100,11 @@ def train(args, train_iter, model):
         optimizer.step()
         model.zero_grad()
 
+
 def main():
     args = get_argparse().parse_args()
     print(json.dumps(vars(args), sort_keys=True, indent=4, separators=(', ', ': '), ensure_ascii=False))
-    init_logger(log_file="./log/{}.log".format(time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())))
+    init_logger(log_file="./log/{}.log".format(time.strftime("%Y-%m-%d-%H-%M-%S", time.localtime())))
     seed_everything(args.seed)
 
     args.output_model_path = os.path.join(args.output_dir, args.dataset, args.event_type, "best_model.pkl")
@@ -111,23 +113,23 @@ def main():
         os.makedirs(os.path.dirname(args.output_model_path))
 
     # device
-    args.device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+    args.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
     # tokenizer
-    tokenizer = BertTokenizerFast.from_pretrained("/data/zhoujx/prev_trained_model/rbt3")
+    tokenizer = BertTokenizerFast.from_pretrained(args.model_name_or_path)
 
     # dataset & dataloader
     args.train_data = "./data/{}/{}/train.tsv".format(args.dataset, args.event_type)
     args.dev_data = "./data/{}/{}/dev.tsv".format(args.dataset, args.event_type)
     args.tag_path = "./conf/{}/{}_tag.dict".format(args.dataset, args.event_type)
     train_dataset = DuEEEventDataset(args,
-                                   args.train_data,
-                                   args.tag_path,
-                                   tokenizer)
+                                     args.train_data,
+                                     args.tag_path,
+                                     tokenizer)
     eval_dataset = DuEEEventDataset(args,
-                                  args.dev_data,
-                                  args.tag_path,
-                                  tokenizer)
+                                    args.dev_data,
+                                    args.tag_path,
+                                    tokenizer)
     logger.info("The nums of the train_dataset features is {}".format(len(train_dataset)))
     logger.info("The nums of the eval_dataset features is {}".format(len(eval_dataset)))
     train_iter = DataLoader(train_dataset,
@@ -170,6 +172,7 @@ def main():
             if early_stop == args.early_stop:
                 logger.info("Early stop in {} epoch!".format(epoch))
                 break
+
 
 if __name__ == '__main__':
     main()

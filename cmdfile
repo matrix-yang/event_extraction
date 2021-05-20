@@ -9,4 +9,8 @@ python predict_ner.py --dataset=DuEE1.0 --event_type=trigger --max_len=250 --per
 
 python predict_ner.py --dataset=DuEE1.0 --event_type=role --max_len=250 --per_gpu_eval_batch_size=64 --model_name_or_path=F:\prev_trained_model\rbt3 --fine_tunning_model_path=./output/DuEE1.0/role/best_model.pkl --test_json=./data/DuEE1.0/duee_test1.json
 
-python duee_1_postprocess.py --trigger_file=./output/DuEE1.0/trigger/test_result.json --role_file=./output/DuEE1.0/role/test_result.json --schema_file=./conf/DuEE1.0/event_schema.json --save_path=./output/DuEE1.0/duee.json
+python duee_1_postprocess.py --trigger_file=./output/DuEE1.0/trigger/test_result.json --role_file=./output/DuEE1.0/role/test_result.json --schema_file=./conf/DuEE1.0/event_schema.json --save_path=./output/DuEE1.0/duee_crf.json
+
+python predict_ner_crf.py --dataset=DuEE1.0 --event_type=trigger --max_len=250 --per_gpu_eval_batch_size=64 --model_name_or_path=F:/prev_trained_model/chinese_wwm_pytorch --fine_tunning_model_path=./output/DuEE1.0/trigger/best_model_bert_crf.pkl --test_json=./data/DuEE1.0/duee_test1.json
+
+python predict_ner_crf.py --dataset=DuEE1.0 --event_type=role --max_len=250 --per_gpu_eval_batch_size=64 --model_name_or_path=F:/prev_trained_model/chinese_wwm_pytorch --fine_tunning_model_path=./output/DuEE1.0/role/best_model_bert_crf.pkl --test_json=./data/DuEE1.0/duee_test1.json
